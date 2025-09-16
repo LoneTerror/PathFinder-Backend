@@ -10,13 +10,69 @@ datasource db {
 }
 
 // --- Define your User table below ---
-
 model User {
-  id              String    @id @default(uuid())
-  email           String    @unique
+  id              String           @id @default(uuid())
+  email           String           @unique
   name            String?
-  currentRole     String?   @map("current_role")
-  yearsExperience Int?      @map("years_of_experience")
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  currentRole     String?          @map("current_role")
+  yearsExperience Int?             @map("years_of_experience")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  // Relations
+  skills          UserSkill[]
+  recommendations Recommendation[]
+}
+
+model Skill {
+  id        String       @id @default(uuid())
+  name      String       @unique
+  category  String?
+  createdAt DateTime     @default(now())
+
+  // Relations
+  users     UserSkill[]
+  careers   CareerSkill[]
+}
+
+model CareerPath {
+  id          String          @id @default(uuid())
+  title       String
+  description String?
+  demandLevel String?
+  createdAt   DateTime        @default(now())
+
+  // Relations
+  requiredSkills CareerSkill[]
+  recommendations Recommendation[]
+}
+
+model UserSkill {
+  id        String   @id @default(uuid())
+  userId    String
+  skillId   String
+  level     String?  // Beginner, Intermediate, Expert
+
+  user      User     @relation(fields: [userId], references: [id])
+  skill     Skill    @relation(fields: [skillId], references: [id])
+}
+
+model CareerSkill {
+  id          String      @id @default(uuid())
+  careerId    String
+  skillId     String
+  importance  Int?        // 1–5 scale
+
+  career      CareerPath  @relation(fields: [careerId], references: [id])
+  skill       Skill       @relation(fields: [skillId], references: [id])
+}
+
+model Recommendation {
+  id          String      @id @default(uuid())
+  userId      String
+  careerId    String
+  message     String?
+
+  user        User        @relation(fields: [userId], references: [id])
+  career      CareerPath  @relation(fields: [careerId], references: [id])
 }

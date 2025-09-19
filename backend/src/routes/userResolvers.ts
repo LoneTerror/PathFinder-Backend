@@ -24,5 +24,14 @@ export const userResolvers = {
 
   Mutation: {
     createUser: (_: any, args: any) => prisma.user.create({ data: args }),
+    updateUser: (_: any, { id, data }: { id: string; data: any }) =>
+    prisma.user.update({
+      where: { id },
+      data,
+    }),
+    deleteUser: (_: any, { id }: { id: string }) =>
+      prisma.user.delete({
+        where: { id },
+      }),
   },
 };

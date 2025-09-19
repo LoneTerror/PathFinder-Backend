@@ -8,7 +8,7 @@ import jwt from 'jsonwebtoken'; // Import the jsonwebtoken library
 
 const prisma = new PrismaClient();
 // Ensure you have JWT_SECRET in your .env file
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || 'JWTSECRETKEY';
 
 // Define an interface for our context so TypeScript knows about userId
 interface Context {

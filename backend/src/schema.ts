@@ -14,6 +14,8 @@ export const typeDefs = gql`
     id: ID!
     email: String!
     name: String
+    phone: String
+    birthday: String
     currentRole: String
     yearsExperience: Int
     skills: [UserSkill]        # Relation
@@ -52,6 +54,14 @@ export const typeDefs = gql`
     career: CareerPath
   }
 
+  input UpdateUserInput {
+    name: String
+    phone: String
+    birthday: String
+    currentRole: String
+    yearsExperience: Int
+  }
+
   type Query {
     getAllUsers: [User]
     getUserById(id: ID!): User
@@ -68,5 +78,7 @@ export const typeDefs = gql`
     addUserSkill(userId: ID!, skillId: ID!, level: String): UserSkill
     addCareerPath(title: String!, description: String, demandLevel: String): CareerPath
     recommendCareer(userId: ID!, careerId: ID!, message: String): Recommendation
+    updateUser(id: ID!, data: UpdateUserInput!): User!
+    deleteUser(id: ID!): User
   }
 `;

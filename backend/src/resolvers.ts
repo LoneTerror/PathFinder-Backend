@@ -1,55 +1,25 @@
-// backend/src/resolvers.ts
-import { PrismaClient } from '@prisma/client';
+import { userResolvers } from './routes/userResolvers';
+import { skillResolvers } from './routes/skillResolvers';
+import { careerResolvers } from './routes/careerResolvers';
+import { recommendationResolvers } from './routes/recommendationResolvers';
+import { authResolvers } from './routes/authResolvers'; // 1. Import the new auth resolvers
 
-const prisma = new PrismaClient();
-
+// This file merges all the separate resolver files into one.
 export const resolvers = {
   Query: {
-    getAllUsers: () =>
-      prisma.user.findMany({
-        include: {
-          skills: { include: { skill: true } },
-          recommendations: { include: { career: true } },
-        },
-      }),
-
-    getUser: (_: any, { id }: { id: string }) =>
-      prisma.user.findUnique({
-        where: { id },
-        include: {
-          skills: { include: { skill: true } },
-          recommendations: { include: { career: true } },
-        },
-      }),
-
-    getSkills: () => prisma.skill.findMany(),
-    getCareerPaths: () => prisma.careerPath.findMany(),
-    getRecommendations: (_: any, { userId }: { userId: string }) =>
-      prisma.recommendation.findMany({
-        where: { userId },
-        include: { career: true },
-      }),
+    // Spread all the query resolvers from each file
+    ...userResolvers.Query,
+    ...skillResolvers.Query,
+    ...careerResolvers.Query,
+    ...recommendationResolvers.Query,
   },
-
   Mutation: {
-    addUser: (_: any, args: any) => prisma.user.create({ data: args }),
-    addSkill: (_: any, args: any) => prisma.skill.create({ data: args }),
-    addUserSkill: (_: any, args: any) =>
-      prisma.userSkill.create({
-        data: {
-          userId: args.userId,
-          skillId: args.skillId,
-          level: args.level,
-        },
-      }),
-    addCareerPath: (_: any, args: any) => prisma.careerPath.create({ data: args }),
-    recommendCareer: (_: any, args: any) =>
-      prisma.recommendation.create({
-        data: {
-          userId: args.userId,
-          careerId: args.careerId,
-          message: args.message,
-        },
-      }),
+    // Spread all the mutation resolvers from each file
+    ...userResolvers.Mutation,
+    ...skillResolvers.Mutation,
+    ...careerResolvers.Mutation,
+    ...recommendationResolvers.Mutation,
+    ...authResolvers.Mutation, // 2. Add the new auth mutations to the list
   },
 };
+

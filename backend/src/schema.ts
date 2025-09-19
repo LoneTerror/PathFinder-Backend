@@ -4,6 +4,12 @@
 import gql from 'graphql-tag';
 
 export const typeDefs = gql`
+
+  type AuthPayload {
+    token: String!
+    user: User!
+  }
+ 
   type User {
     id: ID!
     email: String!
@@ -48,14 +54,16 @@ export const typeDefs = gql`
 
   type Query {
     getAllUsers: [User]
-    getUser(id: ID!): User
+    getUserById(id: ID!): User
     getSkills: [Skill]
     getCareerPaths: [CareerPath]
     getRecommendations(userId: ID!): [Recommendation]
   }
 
   type Mutation {
-    addUser(email: String!, name: String, currentRole: String, yearsExperience: Int): User
+    register(email: String!, password: String!, name: String): AuthPayload!
+    login(email: String!, password: String!): AuthPayload!
+    createUser(email: String!, name: String, currentRole: String, yearsExperience: Int): User
     addSkill(name: String!, category: String): Skill
     addUserSkill(userId: ID!, skillId: ID!, level: String): UserSkill
     addCareerPath(title: String!, description: String, demandLevel: String): CareerPath

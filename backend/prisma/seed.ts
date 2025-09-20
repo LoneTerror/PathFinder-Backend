@@ -1,9 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs'; // Import bcryptjs
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
-// Make the main function async to use await for hashing
 async function main() {
   console.log('Start seeding ...');
 
@@ -11,13 +10,14 @@ async function main() {
   await prisma.userSkill.deleteMany();
   await prisma.careerSkill.deleteMany();
   await prisma.recommendation.deleteMany();
+  await prisma.project.deleteMany(); // Also clear projects
   await prisma.user.deleteMany();
   await prisma.skill.deleteMany();
   await prisma.careerPath.deleteMany();
   console.log('Cleared previous data.');
 
   // --- Seed Users with Hashed Passwords ---
-  const hashedPassword = await bcrypt.hash('password123', 12); // Hash a common password
+  const hashedPassword = await bcrypt.hash('password123', 12);
 
   const alice = await prisma.user.create({
     data: {
@@ -25,7 +25,7 @@ async function main() {
       name: 'Alice',
       currentRole: 'Frontend Developer',
       yearsExperience: 3,
-      password: hashedPassword, // Add the hashed password
+      password: hashedPassword,
     },
   });
 
@@ -35,57 +35,74 @@ async function main() {
       name: 'Bob',
       currentRole: 'Backend Developer',
       yearsExperience: 5,
-      password: hashedPassword, // Add the hashed password
+      password: hashedPassword,
     },
   });
+  console.log('Created users:', { alice, bob });
 
-  const charlie = await prisma.user.create({
-    data: {
-      email: 'charlie@prisma.io',
-      name: 'Charlie',
-      currentRole: 'Full Stack Developer',
-      yearsExperience: 7,
-      password: hashedPassword, // Add the hashed password
-    },
-  });
+  // --- NEWLY INSERTED SKILL SEEDING LOGIC ---
+  const skillsToCreate = [
+    { name: 'JavaScript', category: 'Programming Language' },
+    { name: 'TypeScript', category: 'Programming Language' },
+    { name: 'Python', category: 'Programming Language' },
+    { name: 'React', category: 'Frontend Framework' },
+    { name: 'Node.js', category: 'Backend Environment' },
+    { name: 'GraphQL', category: 'API Technology' },
+    { name: 'PostgreSQL', category: 'Database' },
+    { name: 'Docker', category: 'DevOps' },
+    { name: 'Kubernetes', category: 'DevOps' },
+    { name: 'AWS', category: 'Cloud Provider' },
+    { name: 'Terraform', category: 'Infrastructure as Code' },
+  ];
 
-  console.log('Created users:', { alice, bob, charlie });
-  // ... rest of your seed script for skills, careers, etc.
-  // No changes needed below this line
-  // --- Seed Skills ---
-  const react = await prisma.skill.create({ data: { name: 'React', category: 'Frontend' } });
-  const nodejs = await prisma.skill.create({ data: { name: 'Node.js', category: 'Backend' } });
-  const graphql = await prisma.skill.create({ data: { name: 'GraphQL', category: 'API' } });
-  const postgresql = await prisma.skill.create({ data: { name: 'PostgreSQL', category: 'Database' } });
-  const docker = await prisma.skill.create({ data: { name: 'Docker', category: 'DevOps' } });
+  for (const skill of skillsToCreate) {
+    await prisma.skill.upsert({
+      where: { name: skill.name }, // Use a unique field to prevent duplicates
+      update: {}, // No updates needed if it already exists
+      create: skill,
+    });
+  }
+  console.log('Skills seeded.');
 
-  console.log('Created skills:', { react, nodejs, graphql, postgresql, docker });
-
-  // --- Seed Career Paths ---
-  const frontendDev = await prisma.careerPath.create({
-    data: {
-      title: 'Senior Frontend Developer',
-      description: 'Focuses on user interface and user experience.',
+  // --- NEWLY INSERTED CAREER PATH SEEDING LOGIC ---
+  const careerPathsToCreate = [
+    {
+      title: 'Frontend Developer',
+      description: 'Builds the user interface and experience of web applications.',
       demandLevel: 'High',
     },
-  });
-
-  const backendDev = await prisma.careerPath.create({
-    data: {
-      title: 'Senior Backend Developer',
-      description: 'Manages server-side logic, databases, and APIs.',
+    {
+      title: 'Backend Developer',
+      description: 'Manages the server-side logic, database, and APIs.',
       demandLevel: 'High',
     },
-  });
-
-  const devopsEng = await prisma.careerPath.create({
-    data: {
-      title: 'DevOps Engineer',
-      description: 'Works on infrastructure, deployment pipelines, and automation.',
+    {
+      title: 'Full-Stack Developer',
+      description: 'Works on both the frontend and backend of applications.',
       demandLevel: 'Very High',
     },
-  });
-  console.log('Created career paths:', { frontendDev, backendDev, devopsEng });
+    {
+      title: 'DevOps Engineer',
+      description: 'Manages application deployment, infrastructure, and CI/CD pipelines.',
+      demandLevel: 'Very High',
+    },
+    {
+      title: 'AI / Machine Learning Engineer',
+      description: 'Designs and builds intelligent systems and predictive models.',
+      demandLevel: 'High',
+    },
+  ];
+
+  for (const career of careerPathsToCreate) {
+    await prisma.careerPath.upsert({
+      where: { title: career.title }, 
+      update: {},
+      create: career,
+    });
+  }
+  console.log('Career Paths seeded.');
+
+  console.log('Seeding complete.');
 }
 
 main()

@@ -18,7 +18,11 @@ export const typeDefs = gql`
     birthday: String
     currentRole: String
     yearsExperience: Int
-    skills: [UserSkill]        # Relation
+    highestQualification: String
+    longTermGoal: String
+    skills: [UserSkill]        
+    careerGoals: [CareerPath]
+    projects: [Project]
     recommendations: [Recommendation]
   }
 
@@ -26,6 +30,14 @@ export const typeDefs = gql`
     id: ID!
     name: String!
     category: String
+  }
+
+  type Project {
+    id: ID!
+    name: String!
+    description: String
+    githubLink: String
+    user: User!
   }
 
   type UserSkill {
@@ -75,10 +87,22 @@ export const typeDefs = gql`
     login(email: String!, password: String!): AuthPayload!
     createUser(email: String!, name: String, currentRole: String, yearsExperience: Int): User
     addSkill(name: String!, category: String): Skill
-    addUserSkill(userId: ID!, skillId: ID!, level: String): UserSkill
     addCareerPath(title: String!, description: String, demandLevel: String): CareerPath
     recommendCareer(userId: ID!, careerId: ID!, message: String): Recommendation
     updateUser(id: ID!, data: UpdateUserInput!): User!
     deleteUser(id: ID!): User
+    # For Skills & Expertise Screen
+    addUserSkill(userId: ID!, skillId: ID!, level: String!): UserSkill!
+    updateUserSkill(userSkillId: ID!, level: String!): UserSkill!
+    removeUserSkill(userSkillId: ID!): UserSkill!
+
+    # For Career Goals Screen
+    addUserCareerGoal(userId: ID!, careerPathId: ID!): User!
+    removeUserCareerGoal(userId: ID!, careerPathId: ID!): User!
+
+    # For Final Review Screen
+    addProject(userId: ID!, name: String!, description: String, githubLink: String): Project!
+    updateProject(projectId: ID!, name: String, description: String, githubLink: String): Project!
+    deleteProject(projectId: ID!): Project!
   }
 `;

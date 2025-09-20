@@ -17,12 +17,16 @@ model User {
   name            String?
   currentRole     String?          @map("current_role")
   yearsExperience Int?             @map("years_of_experience")
+  highestQualification String?
+  longTermGoal    String?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 
   // Relations
   skills          UserSkill[]
   recommendations Recommendation[]
+  careerGoals     CareerPath[]     @relation("UserCareerGoals")
+  projects        Project[]
 }
 
 model Skill {
@@ -38,12 +42,13 @@ model Skill {
 
 model CareerPath {
   id          String          @id @default(uuid())
-  title       String
+  title       String          @unique
   description String?
   demandLevel String?
   createdAt   DateTime        @default(now())
 
-  // Relations
+  // Relations 
+  users User[]                @relation("UserCareerGoals")
   requiredSkills CareerSkill[]
   recommendations Recommendation[]
 }
@@ -76,4 +81,16 @@ model Recommendation {
 
   user        User        @relation(fields: [userId], references: [id])
   career      CareerPath  @relation(fields: [careerId], references: [id])
+
+  @@unique([userId, careerId])
+}
+
+// --- NEW PROJECT MODEL ---
+model Project {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  githubLink  String?
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
 }

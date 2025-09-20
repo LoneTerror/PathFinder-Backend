@@ -20,8 +20,11 @@ JWT_SECRET="key_here"
 - In `DATABASE_URL` here:
 
 -- The `user_name` is your -> Postgresql Username (default is `postgres`)
+
 -- `password` is the password you use to login, 
+
 -- `5432` is the port on which postgresql service is running (default is same)
+
 -- `db_name` is the database name, in this case create a database named ```pathfinder``` in your postgresql database
 
 
@@ -29,21 +32,35 @@ JWT_SECRET="key_here"
 
 
 - a. Prisma Generation: 
-Generate the prisma file using the command: ```npx prisma generate```
 
 
-- b. Prisma Migrate: 
+Generate the prisma file using the command: 
+```
+npx prisma generate
+```
 
 
-Initializes the database & creates tables alongwith columns automatically
-Run the migration command: ```npx prisma migrate dev```
+- b. Prisma Migrate: (Initializes the database & creates tables alongwith columns automatically)
 
 
-- c. Prisma Seed:
-Seeds the values inside the table from the folder `seed.ts`
-Run the seeding command: ```npx prisma db seed```
+Run the migration command: 
+```
+npx prisma migrate dev
+```
+
+
+- c. Prisma Seed: (Seeds the values inside the table from the folder `seed.ts`)
+
+
+Run the seeding command: 
+```
+npx prisma db seed
+```
 
 
 # 3. Finally Run the backend
 
-```npm run dev```
+
+```
+npm run dev
+```

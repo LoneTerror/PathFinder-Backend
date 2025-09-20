@@ -61,9 +61,11 @@ const startServer = async () => {
 
   server.applyMiddleware({ app });
 
-  app.listen({ port: 4001 }, () =>
-    console.log(`🚀 Backend ready at http://localhost:4001${server.graphqlPath}`)
+  app.listen({ port: 5007 }, () =>
+  console.log(`🚀 Backend ready at https://backend.revvote.site${server.graphqlPath}`)
   );
 };
+
+startServer();
 
 startServer();

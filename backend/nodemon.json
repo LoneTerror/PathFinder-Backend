@@ -1,6 +1,9 @@
 {
   "watch": ["src"],
   "ext": "ts",
-  "ignore": ["src/**/*.spec.ts"],
-  "exec": "ts-node ./src/index.ts"
+  "execMap": {
+    "ts": "ts-node"
+  },
+  "ignore": ["node_modules/", "dist/", "prisma/"],
+  "delay": "2500ms"
 }

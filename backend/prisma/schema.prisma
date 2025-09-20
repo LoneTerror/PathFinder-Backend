@@ -9,12 +9,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ProjectStatus {
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+
 // --- Define your User table below ---
 model User {
   id              String           @id @default(uuid())
   email           String           @unique
   password        String           
   name            String?
+  phone                String?   // <-- ADD THIS LINE
+  birthday             String?   // <-- ADD THIS LINE
+  gender               Gender?
+  profileImageUrl      String?
   currentRole     String?          @map("current_role")
   yearsExperience Int?             @map("years_of_experience")
   highestQualification String?
@@ -85,12 +103,14 @@ model Recommendation {
   @@unique([userId, careerId])
 }
 
-// --- NEW PROJECT MODEL ---
 model Project {
-  id          String  @id @default(cuid())
+  id          String        @id @default(cuid())
   name        String
   description String?
   githubLink  String?
-  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
+  status      ProjectStatus @default(ACTIVE) // New status field
+
+  // Relation to User
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 }

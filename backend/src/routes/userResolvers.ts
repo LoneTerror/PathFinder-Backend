@@ -9,6 +9,8 @@ export const userResolvers = {
         include: {
           skills: { include: { skill: true } },
           recommendations: { include: { career: true } },
+          projects: true,      // <-- ADD THIS
+          careerGoals: true,   // <-- ADD THIS
         },
       }),
 
@@ -18,6 +20,8 @@ export const userResolvers = {
         include: {
           skills: { include: { skill: true } },
           recommendations: { include: { career: true } },
+          projects: true,      // <-- ADD THIS
+          careerGoals: true,   // <-- ADD THIS
         },
       }),
   },
@@ -25,10 +29,10 @@ export const userResolvers = {
   Mutation: {
     createUser: (_: any, args: any) => prisma.user.create({ data: args }),
     updateUser: (_: any, { id, data }: { id: string; data: any }) =>
-    prisma.user.update({
-      where: { id },
-      data,
-    }),
+      prisma.user.update({
+        where: { id },
+        data,
+      }),
     deleteUser: (_: any, { id }: { id: string }) =>
       prisma.user.delete({
         where: { id },

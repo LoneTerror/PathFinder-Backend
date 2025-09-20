@@ -1,10 +1,21 @@
-// backend/src/schema.ts
-
-
 import gql from 'graphql-tag';
 
 export const typeDefs = gql`
+  # --- Enums ---
+  enum Gender {
+    MALE
+    FEMALE
+    OTHER
+    PREFER_NOT_TO_SAY
+  }
 
+  enum ProjectStatus {
+    ACTIVE
+    COMPLETED
+    ARCHIVED
+  }
+
+  # --- Object Types ---
   type AuthPayload {
     token: String!
     user: User!
@@ -14,13 +25,15 @@ export const typeDefs = gql`
     id: ID!
     email: String!
     name: String
+    gender: Gender
+    profileImageUrl: String
     phone: String
     birthday: String
     currentRole: String
     yearsExperience: Int
     highestQualification: String
     longTermGoal: String
-    skills: [UserSkill]        
+    skills: [UserSkill]       
     careerGoals: [CareerPath]
     projects: [Project]
     recommendations: [Recommendation]
@@ -37,6 +50,7 @@ export const typeDefs = gql`
     name: String!
     description: String
     githubLink: String
+    status: ProjectStatus!
     user: User!
   }
 
@@ -66,14 +80,20 @@ export const typeDefs = gql`
     career: CareerPath
   }
 
+  # --- Input Types ---
   input UpdateUserInput {
     name: String
     phone: String
     birthday: String
+    gender: Gender
+    profileImageUrl: String
     currentRole: String
     yearsExperience: Int
+    highestQualification: String
+    longTermGoal: String
   }
 
+  # --- Queries & Mutations ---
   type Query {
     getAllUsers: [User]
     getUserById(id: ID!): User
@@ -91,6 +111,7 @@ export const typeDefs = gql`
     recommendCareer(userId: ID!, careerId: ID!, message: String): Recommendation
     updateUser(id: ID!, data: UpdateUserInput!): User!
     deleteUser(id: ID!): User
+
     # For Skills & Expertise Screen
     addUserSkill(userId: ID!, skillId: ID!, level: String!): UserSkill!
     updateUserSkill(userSkillId: ID!, level: String!): UserSkill!
@@ -101,8 +122,8 @@ export const typeDefs = gql`
     removeUserCareerGoal(userId: ID!, careerPathId: ID!): User!
 
     # For Final Review Screen
-    addProject(userId: ID!, name: String!, description: String, githubLink: String): Project!
-    updateProject(projectId: ID!, name: String, description: String, githubLink: String): Project!
+    addProject(userId: ID!, name: String!, description: String, githubLink: String, status: ProjectStatus): Project!
+    updateProject(projectId: ID!, name: String, description: String, githubLink: String, status: ProjectStatus): Project!
     deleteProject(projectId: ID!): Project!
   }
 `;

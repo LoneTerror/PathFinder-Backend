@@ -17,7 +17,7 @@ JWT_SECRET="key_here"
 ```
 
 
-- In `DATABASE_URL` here:
+- Step 2: In `DATABASE_URL` here:
 
 -- The `user_name` is your -> Postgresql Username (default is `postgres`)
 

@@ -28,9 +28,10 @@ SERVER_PORT=<PORT_HERE>
 
 -- `db_name` is the database name, in this case create a database named ```pathfinder``` in your postgresql database
 
+
 - Step 3: Install Dependencies:
 
--- Use this command to install the dependencies:
+  Use this command to install the dependencies:
 
 ```
 cd backend

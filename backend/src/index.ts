@@ -19,7 +19,7 @@ interface Context {
 const startServer = async () => {
   const app: Application = express();
 
-  // 1. Connect to the database (This part is correct)
+  // 1. Connect to the database
   try {
     await prisma.$connect();
     console.log('✅ Database connection established successfully.');
@@ -64,7 +64,8 @@ const startServer = async () => {
   const PORT = process.env.SERVER_PORT || 4001;
 
   app.listen({ port: PORT }, () =>
-  console.log(`🚀 Backend ready at https://backend.revvote.site${server.graphqlPath}`)
+    // FIX: Changed the server link to use localhost and the defined PORT
+    console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`)
   );
 };
 

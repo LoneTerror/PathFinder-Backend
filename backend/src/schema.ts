@@ -39,10 +39,20 @@ export const typeDefs = gql`
     recommendations: [Recommendation]
   }
 
+  type Course {
+    id: ID!
+    title: String!
+    provider: String
+    url: String # You might want a URL for the course
+  }
+
   type Skill {
     id: ID!
     name: String!
     category: String
+    description: String   
+    relatedRoles: [CareerPath] 
+    courses: [Course]      
   }
 
   type Project {
@@ -101,6 +111,7 @@ export const typeDefs = gql`
     getCareerPaths: [CareerPath]
     getRecommendations(userId: ID!): [Recommendation]
     chatMessages(userId: ID!): [ChatMessage!]
+    getSkillByName(name: String!): Skill # <-- ADD THIS LINE
   }
 
   type Mutation {
@@ -118,6 +129,7 @@ export const typeDefs = gql`
     addUserSkill(userId: ID!, skillId: ID!, level: String!): UserSkill!
     updateUserSkill(userSkillId: ID!, level: String!): UserSkill!
     removeUserSkill(userSkillId: ID!): UserSkill!
+    getSkillByName(name: String!): Skill 
 
     # For Career Goals Screen
     addUserCareerGoal(userId: ID!, careerPathId: ID!): User!

@@ -22,23 +22,22 @@ enum Gender {
   PREFER_NOT_TO_SAY
 }
 
-
 // --- Define your User table below ---
 model User {
-  id              String           @id @default(uuid())
-  email           String           @unique
-  password        String           
-  name            String?
-  phone                String?   // <-- ADD THIS LINE
-  birthday             String?   // <-- ADD THIS LINE
+  id                   String   @id @default(uuid())
+  email                String   @unique
+  password             String
+  name                 String?
+  phone                String? // <-- ADD THIS LINE
+  birthday             String? // <-- ADD THIS LINE
   gender               Gender?
   profileImageUrl      String?
-  currentRole     String?          @map("current_role")
-  yearsExperience Int?             @map("years_of_experience")
+  currentRole          String?  @map("current_role")
+  yearsExperience      Int?     @map("years_of_experience")
   highestQualification String?
-  longTermGoal    String?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  longTermGoal         String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 
   // Relations
   skills          UserSkill[]
@@ -48,57 +47,61 @@ model User {
 }
 
 model Skill {
-  id        String       @id @default(uuid())
-  name      String       @unique
-  category  String?
-  createdAt DateTime     @default(now())
+  id          String   @id @default(uuid())
+  name        String   @unique
+  category    String?
+  description String? // <-- ADD
+  createdAt   DateTime @default(now())
 
   // Relations
-  users     UserSkill[]
-  careers   CareerSkill[]
+  users        UserSkill[]
+  careers      CareerSkill[]
+  courses      Course[]
+  relatedRoles CareerPath[]  @relation("RelatedRoles") // <-- ADD
 }
 
 model CareerPath {
-  id          String          @id @default(uuid())
-  title       String          @unique
+  id          String   @id @default(uuid())
+  title       String   @unique
   description String?
   demandLevel String?
-  createdAt   DateTime        @default(now())
+  createdAt   DateTime @default(now())
 
   // Relations 
-  users User[]                @relation("UserCareerGoals")
-  requiredSkills CareerSkill[]
+  users           User[]           @relation("UserCareerGoals")
+  requiredSkills  CareerSkill[]
   recommendations Recommendation[]
+  relatedSkills   Skill[]          @relation("RelatedRoles") // <-- ADD
 }
 
 model UserSkill {
-  id        String   @id @default(uuid())
-  userId    String
-  skillId   String
-  level     String?  // Beginner, Intermediate, Expert
+  id      String  @id @default(uuid())
+  userId  String
+  skillId String
+  level   String? // Beginner, Intermediate, Expert
 
-  user      User     @relation(fields: [userId], references: [id])
-  skill     Skill    @relation(fields: [skillId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+  skill Skill @relation(fields: [skillId], references: [id])
 }
 
 model CareerSkill {
-  id          String      @id @default(uuid())
-  careerId    String
-  skillId     String
-  importance  Int?        // 1–5 scale
+  id         String @id @default(uuid())
+  careerId   String
+  skillId    String
+  importance Int? // 1–5 scale
 
-  career      CareerPath  @relation(fields: [careerId], references: [id])
-  skill       Skill       @relation(fields: [skillId], references: [id])
+  career CareerPath @relation(fields: [careerId], references: [id])
+  skill  Skill      @relation(fields: [skillId], references: [id])
 }
 
 model Recommendation {
-  id          String      @id @default(uuid())
-  userId      String
-  careerId    String
-  message     String?
+  id       String  @id @default(uuid())
+  userId   String
+  careerId String
+  message  String?
 
-  user        User        @relation(fields: [userId], references: [id])
-  career      CareerPath  @relation(fields: [careerId], references: [id])
+  user   User       @relation(fields: [userId], references: [id])
+  career CareerPath @relation(fields: [careerId], references: [id])
 
   @@unique([userId, careerId])
 }
@@ -121,4 +124,13 @@ model ChatMessage {
   sender    String
   text      String
   timestamp DateTime @default(now())
+}
+
+model Course {
+  id       String  @id @default(cuid())
+  title    String
+  provider String?
+  url      String?
+  skill    Skill   @relation(fields: [skillId], references: [id])
+  skillId  String
 }

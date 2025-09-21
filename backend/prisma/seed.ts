@@ -13,6 +13,7 @@ async function main() {
   await prisma.careerSkill.deleteMany();
   await prisma.recommendation.deleteMany();
   await prisma.project.deleteMany();
+  await prisma.course.deleteMany();
   await prisma.user.deleteMany();
   await prisma.skill.deleteMany();
   await prisma.careerPath.deleteMany();
@@ -21,14 +22,15 @@ async function main() {
   // 2. Seed static data like Skills and Career Paths first
   // This makes it easier to get their IDs for linking later.
   console.log('Seeding skills and career paths...');
-  const [react, nodejs, graphql, python, docker, kubernetes, aws] = await Promise.all([
-    prisma.skill.create({ data: { name: 'React', category: 'Frontend' } }),
+  const [react, nodejs, graphql, python, docker, kubernetes, aws, jetpackCompose] = await Promise.all([
+    prisma.skill.create({ data: { name: 'React', category: 'Frontend', description: 'A JavaScript library for building user interfaces.' } }),
     prisma.skill.create({ data: { name: 'Node.js', category: 'Backend' } }),
     prisma.skill.create({ data: { name: 'GraphQL', category: 'API' } }),
     prisma.skill.create({ data: { name: 'Python', category: 'Programming Language' } }),
     prisma.skill.create({ data: { name: 'Docker', category: 'DevOps' } }),
     prisma.skill.create({ data: { name: 'Kubernetes', category: 'DevOps' } }),
     prisma.skill.create({ data: { name: 'AWS', category: 'Cloud Computing' } }),
+    prisma.skill.create({ data: { name: 'Jetpack Compose', category: 'Android', description: 'Android’s recommended modern toolkit for building native UI.' } }), // <-- ADDED SKILL
   ]);
 
   const [frontendDev, backendDev, devopsEng] = await Promise.all([
@@ -72,6 +74,17 @@ async function main() {
   ]);
   console.log('Skills and Career Paths seeded.');
 
+  console.log('Seeding courses...');
+  await prisma.course.createMany({
+    data: [
+        { title: 'React - The Complete Guide', provider: 'Udemy', skillId: react.id },
+        { title: 'Modern React with Redux', provider: 'Udemy', skillId: react.id },
+        { title: 'Jetpack Compose for Android Developers', provider: 'Udacity', skillId: jetpackCompose.id },
+        { title: 'Android Basics with Compose', provider: 'Google', skillId: jetpackCompose.id },
+    ]
+  });
+  console.log('Courses seeded.');
+
   // 3. Seed Users and connect them to existing skills and career goals
   console.log('Seeding users and their relations...');
   const hashedPassword = await bcrypt.hash('password123', 12);
@@ -82,14 +95,17 @@ async function main() {
       name: 'Alice',
       password: hashedPassword,
       gender: Gender.FEMALE,
-      phone: '123-456-7890',      // <-- ADDED
-      birthday: '05/10/1995',     // <-- ADDED
+      phone: '123-456-7890',
+      birthday: '05/10/1995',
       currentRole: 'Frontend Developer',
       yearsExperience: 3,
       highestQualification: 'Bachelors in Computer Science',
       longTermGoal: 'Become a Principal Frontend Engineer',
       skills: {
-        create: [{ skillId: react.id, level: 'Advanced' }],
+        create: [
+            { skillId: react.id, level: 'Advanced' },
+            { skillId: jetpackCompose.id, level: 'Intermediate' } // <-- GAVE ALICE A NEW SKILL
+        ],
       },
       careerGoals: {
         connect: [{ id: frontendDev.id }],

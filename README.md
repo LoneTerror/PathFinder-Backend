@@ -14,6 +14,7 @@ ENV FORMAT:
 ```
 DATABASE_URL="postgresql://user_name:password@localhost:5432/db_name?schema=public"
 JWT_SECRET="key_here"
+SERVER_PORT=<PORT_HERE>
 ```
 
 
@@ -26,6 +27,15 @@ JWT_SECRET="key_here"
 -- `5432` is the port on which postgresql service is running (default is same)
 
 -- `db_name` is the database name, in this case create a database named ```pathfinder``` in your postgresql database
+
+- Step 3: Install Dependencies:
+
+-- Use this command to install the dependencies:
+
+```
+cd backend
+npm install
+```
 
 
 # 2. Prisma Setup

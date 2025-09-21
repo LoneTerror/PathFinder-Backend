@@ -20,13 +20,13 @@ SERVER_PORT=<PORT_HERE>
 
 - Step 2: In `DATABASE_URL` here:
 
--- The `user_name` is your -> Postgresql Username (default is `postgres`)
+    -- The `user_name` is your -> Postgresql Username (default is `postgres`)
 
--- `password` is the password you use to login, 
+    -- `password` is the password you use to login, 
 
--- `5432` is the port on which postgresql service is running (default is same)
+    -- `5432` is the port on which postgresql service is running (default is same)
 
--- `db_name` is the database name, in this case create a database named ```pathfinder``` in your postgresql database
+    -- `db_name` is the database name, in this case create a database named ```pathfinder``` in your postgresql database
 
 
 - Step 3: Install Dependencies:

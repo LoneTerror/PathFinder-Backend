@@ -130,9 +130,10 @@ export const typeDefs = gql`
   }
 
   type ChatMessage {
+    id: ID!
     sender: String!
     text: String!
-  }
+  } 
 
   input ChatMessageInput {
     sender: String!

@@ -100,6 +100,7 @@ export const typeDefs = gql`
     getSkills: [Skill]
     getCareerPaths: [CareerPath]
     getRecommendations(userId: ID!): [Recommendation]
+    chatMessages(userId: ID!): [ChatMessage!]
   }
 
   type Mutation {
@@ -111,6 +112,7 @@ export const typeDefs = gql`
     recommendCareer(userId: ID!, careerId: ID!, message: String): Recommendation
     updateUser(id: ID!, data: UpdateUserInput!): User!
     deleteUser(id: ID!): User
+    saveChatMessages(userId: ID!, messages: [ChatMessageInput!]!): [ChatMessage!]
 
     # For Skills & Expertise Screen
     addUserSkill(userId: ID!, skillId: ID!, level: String!): UserSkill!
@@ -125,5 +127,15 @@ export const typeDefs = gql`
     addProject(userId: ID!, name: String!, description: String, githubLink: String, status: ProjectStatus): Project!
     updateProject(projectId: ID!, name: String, description: String, githubLink: String, status: ProjectStatus): Project!
     deleteProject(projectId: ID!): Project!
+  }
+
+  type ChatMessage {
+    sender: String!
+    text: String!
+  }
+
+  input ChatMessageInput {
+    sender: String!
+    text: String!
   }
 `;

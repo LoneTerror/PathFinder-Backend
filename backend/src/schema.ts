@@ -100,6 +100,7 @@ export const typeDefs = gql`
     getSkills: [Skill]
     getCareerPaths: [CareerPath]
     getRecommendations(userId: ID!): [Recommendation]
+    chatMessages(userId: ID!): [ChatMessage!]
   }
 
   type Mutation {
@@ -126,4 +127,10 @@ export const typeDefs = gql`
     updateProject(projectId: ID!, name: String, description: String, githubLink: String, status: ProjectStatus): Project!
     deleteProject(projectId: ID!): Project!
   }
+
+  type ChatMessage {
+    sender: String!
+    text: String!
+  }
+
 `;

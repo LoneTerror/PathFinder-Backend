@@ -112,7 +112,7 @@ export const typeDefs = gql`
     recommendCareer(userId: ID!, careerId: ID!, message: String): Recommendation
     updateUser(id: ID!, data: UpdateUserInput!): User!
     deleteUser(id: ID!): User
-    saveChatMessages(userId: ID!, messages: [ChatMessageInput!]!): [ChatMessage!]
+    saveChatMessages(userId: ID!, messages: [ChatMessageInput!]!): Int!
 
     # For Skills & Expertise Screen
     addUserSkill(userId: ID!, skillId: ID!, level: String!): UserSkill!

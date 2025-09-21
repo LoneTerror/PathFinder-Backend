@@ -1,3 +1,5 @@
+// src/routes/chatResolvers.ts
+
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -21,6 +23,6 @@ export const chatResolvers = {
           sender: msg.sender,
           text: msg.text,
         })),
-      }),
+      }).then(result => result.count) 
   },
 };

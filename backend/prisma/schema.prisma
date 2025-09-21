@@ -114,3 +114,11 @@ model Project {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 }
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  sender    String
+  text      String
+  timestamp DateTime @default(now())
+}
